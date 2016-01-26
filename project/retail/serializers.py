@@ -33,3 +33,33 @@ class ChainSerializer(serializers.Serializer):
         instance.website = validated_data.get('website', instance.website)
         instance.save()
         return instance
+
+
+class StoreSerializer(serializers.Serializer):
+    pk = serializers.IntegerField(read_only=True)
+    number = serializers.CharField(required=False, allow_blank=True, max_length=20)
+    address = serializers.CharField(required=False, allow_blank=True, max_length=1000)
+    opening_date = serializers.DateField()
+    business_hours_start = serializers.IntegerField()
+    business_hours_end = serializers.IntegerField()
+
+    def create(self, validated_data):
+        """Create and return a new Store instance given the validated data.
+
+        :param validated_data: The validated data used to create a Store instance.
+        :return: Newly created Store instance.
+        """
+        return Store.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        """Update and return an existing Store instance, given the validated data.
+
+        :param instance: A Store instance.
+        :param validated_data: The validated data used to update a Store instance.
+        :return: Updated Store instance.
+        """
+        instance.number = validated_data.get('number', instance.number)
+        instance.address = validated_data.get('address', instance.address)
+        instance.opening_date = validated_data.get('opening_date', instance.opening_date)
+        instance.business_hours_start = validated_data.get('business_hours_start', instance.business_hours_start)
+        instance.business_hours_end = validated_data.get('business_hours_end', instance.business_hours_end)
