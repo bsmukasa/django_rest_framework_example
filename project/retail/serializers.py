@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from project.retail.models import Chain, Store
+from project.retail.models import Chain, Store, Employee
 
 
 class ChainSerializer(serializers.Serializer):
@@ -63,3 +63,31 @@ class StoreSerializer(serializers.Serializer):
         instance.opening_date = validated_data.get('opening_date', instance.opening_date)
         instance.business_hours_start = validated_data.get('business_hours_start', instance.business_hours_start)
         instance.business_hours_end = validated_data.get('business_hours_end', instance.business_hours_end)
+
+
+class EmployeeSerializer(serializers.Serializer):
+    pk = serializers.IntegerField(read_only=True)
+    number = serializers.CharField(required=False, allow_blank=True, max_length=20)
+    first_name = serializers.CharField(required=False, allow_blank=True, max_length=100)
+    last_name = serializers.CharField(required=False, allow_blank=True, max_length=100)
+    hired_date = serializers.DateField()
+
+    def create(self, validated_data):
+        """Create and return a new Employee instance given the validated data.
+
+        :param validated_data: The validated data used to create an Employee instance.
+        :return: Newly created Employee instance.
+        """
+        return Employee.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        """Update and return an existing Employee instance, given the validated data.
+
+        :param instance: An Employee instance.
+        :param validated_data: The validated data used to update an Employee instance.
+        :return: Updated Employee instance.
+        """
+        instance.number = validated_data.get('number', instance.number)
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.hired_date = validated_data.get('hired_date', instance.hired_date)
